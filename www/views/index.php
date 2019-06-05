@@ -1,5 +1,6 @@
 <?php
 use App\Model\Post;
+use App\Helpers\Text;
 
 $pdo = new PDO(
     "mysql:host=" .
@@ -49,11 +50,11 @@ $title = 'Mon Super MEGA blog';
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><?= $post->getName() ?></h5>
-                    <p class="card-text"><?= substr($post->getContent(), 0, 100) ?>...</p>
+                    <p class="card-text"><?= Text::excerpt($post->getContent(), 200) ?></p>
                 </div>
-                <a href="/article/<?= $post->getSlug() ?>-<?= $post->getId() ?>" class="text-center pb-2">lire plus</a>
+                <a href="<?= $router->url('post', ['id' => $post->getId(), 'slug'=> $post->getSlug()])?>" class="text-center pb-2">lire plus</a>
                 <div class="card-footer text-muted">
-                    <?= (new DateTime($post->getCreatedAt()))->format('d/m/Y h:i')   ?>
+                    <?= $post->getCreatedAt()->format('d/m/Y h:i')   ?>
                 </div>
             </div>
         </article>
