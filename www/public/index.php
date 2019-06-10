@@ -1,15 +1,18 @@
 <?php
+define("GENERATE_TIME_START", microtime(true));
 $basePath = dirname(__dir__) . DIRECTORY_SEPARATOR;
 
 require_once $basePath . 'vendor/autoload.php';
 
-$whoops = new \Whoops\Run;
-$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-$whoops->register();
 
-if (isset($_GET["page"]) && ((int)$_GET["page"] <= 1 || !is_int((int)$_GET["page"]) || is_float($_GET["page"] + 0))) {
+    $whoops = new \Whoops\Run;
+    $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+    $whoops->register();
+
+$numPage = \App\URL::getPositiveInt('page');
+if ($numPage !== null) {
     // url /categories?page=1&parm2=pomme
-    if ((int)$_GET["page"] == 1) {
+    if ($numPage == 1) {
         $uri = explode('?', $_SERVER["REQUEST_URI"])[0];
         $get = $_GET;
         unset($get["page"]);
@@ -20,14 +23,15 @@ if (isset($_GET["page"]) && ((int)$_GET["page"] <= 1 || !is_int((int)$_GET["page
         http_response_code(301);
         header('location: ' . $uri);
         exit();
-    } else {
-        throw new Exception('numero de page non valide ;) petit pirate');
     }
 }
 
+
 $router = new App\Router($basePath . 'views');
 
-$router->get('/', 'index', 'home')
-    ->get('/categories', 'categories', 'categories')
-    ->get('/article/[*:slug]-[i:id]', 'post/index', 'post')
+$router->get('/', 'post/index', 'home')
+    ->get('/categories', 'categories/index', 'categories')
+    ->get('/category/[*:slug]-[i:id]', 'categories/show', 'category')
+    ->get('/contact', 'contact', 'contact')
+    ->get('/article/[*:slug]-[i:id]', 'post/show', 'post')
     ->run();

@@ -1,31 +1,29 @@
 <?php
-/**
- * fichier qui génère la vue pour l'url /article/[i:id]
- * 
- */
-$id = $params['id'];
-$slug = $params['slug'];
-$title = "article " . $slug;
+use App\Model\Post;
+use App\Connection;
 
-$pdo = new PDO(
-    "mysql:host=" . getenv('MYSQL_HOST') . ";dbname=" . getenv('MYSQL_DATABASE'),
-    getenv('MYSQL_USER'),
-    getenv('MYSQL_PASSWORD')
+$paginatedQuery = new App\PaginatedQuery(
+    "SELECT count(id) FROM post",
+    "SELECT * FROM post 
+    ORDER BY id",
+    Post::class,
+    $router->url('home')
 );
-$post = $pdo->query("SELECT * FROM `post` WHERE `id` LIKE ".$id)->fetch(\PDO::FETCH_OBJ);
+$posts = $paginatedQuery->getItems();
+$title = 'Mon Super MEGA blog';
 ?>
 
-<h1><?= $post->name ?></h1>
-
-<p><?= $post->content ?></p>
-
-<p>article avec l'id <?= $id . " et le slug " . $post->slug ?></p>
-
-<a href="/"><button>Retour</button></a>
-
-
-<p>article avec l'id <big><?= $id . '</big> et le slug <big>' . $slug ?></big></p>
-
-
-
-
+<?php if (null !== $message) : ?>
+    <div class="alert-message">
+        <?= $message ?>
+    </div>
+<?php endif ?>
+<section class="row">
+    <?php /** @var Post::class $post */
+    foreach ($posts as $post) {
+        require 'card.php';
+    }
+    ?>
+</section>
+<?php
+echo $paginatedQuery->getNavHtml();

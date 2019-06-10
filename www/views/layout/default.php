@@ -28,7 +28,7 @@
                     <a class="nav-link" href="#">Pricing</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="/contact">About</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
@@ -45,6 +45,14 @@
     </section>
     <footer class="footer bg-dark fixed-bottom py-1">
         <div class="text-center">
+        <?php
+            $debug = "";
+            if (getenv("ENV_DEV")) {
+                $end = microtime(true);
+                $generationtime = number_format(($end - GENERATE_TIME_START) * 1000, 2);
+                $debug = " - Page générée en " . $generationtime . " ms";
+            }
+            ?>
             <span class="text-white">by julien</span>
         </div>
     </footer>
@@ -53,8 +61,6 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous">
     </script>
-
-    <script src="/asset/js/script.js"></script>
 </body>
 
 </html>
