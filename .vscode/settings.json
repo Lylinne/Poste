@@ -1,0 +1,5 @@
+{
+    "phpunit.command": "docker exec -t blog",
+    "phpunit.phpunit": "/var/www/vendor/bin/phpunit",
+    "phpunit.paths": {"/home/celine/Site/NewBlogMVC/wwww/" : "/var/www/"}
+}
